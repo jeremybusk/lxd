@@ -1,0 +1,33 @@
+zfs send local/containers/test-nginx | ssh -p 10022 10.x.x.x zfs recv local/test-nginx
+
+
+
+
+zfs send -R local@moving | ssh -p 10022 10.1.1.22 zfs recv tank
+
+
+
+# On Source
+zfs snapshot -r local@moving
+zfs send -R local@moving | ssh -p 10022 10.x.x.x zfs recv -F local
+# or single zfs example  # zfs send local/containers/test-nginx | ssh -p 10022 10.1.1.22 zfs recv tank/test-nginx-dest (change file info too)
+
+# On Remote
+lxd-import-ns <my-containername>
+
+
+
+
+
+on remote
+# zpool destroy tank
+# zpool create tank nvme0n1
+zpool create slow raidz sda sdb sdc sdd
+zpool create slow mirror sda sdb mirror sdc sdd
+
+
+
+zfs snapshot -r sourcepool@moving
+zfs send -R sourcepool@moving | zfs receive -F destpool
+# https://serverfault.com/questions/88638/moving-a-zfs-filesystem-from-one-pool-to-another
+#
