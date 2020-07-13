@@ -3,14 +3,14 @@ zfs send local/containers/test-nginx | ssh -p 10022 10.x.x.x zfs recv local/test
 
 
 
-zfs send -R local@moving | ssh -p 10022 10.1.1.22 zfs recv tank
+zfs send -R local@moving | ssh -p 10022 10.x.x.x zfs recv tank
 
 
 
 # On Source
 zfs snapshot -r local@moving
 zfs send -R local@moving | ssh -p 10022 10.x.x.x zfs recv -F local
-# or single zfs example  # zfs send local/containers/test-nginx | ssh -p 10022 10.1.1.22 zfs recv tank/test-nginx-dest (change file info too)
+# or single zfs example  # zfs send local/containers/test-nginx | ssh -p 10022 10.x.x.x zfs recv tank/test-nginx-dest (change file info too)
 
 # On Remote
 lxd-import-ns <my-containername>
