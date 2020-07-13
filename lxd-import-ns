@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# mount zfs in lxd namespace https://discuss.linuxcontainers.org/t/lxd-import-not-working/6702
+set -e
+
+if [[ -z $1 ]]; then
+  echo "<container name>"
+fi
+
+container_name=$1
+pid=$(cat /var/snap/lxd/common/lxd.pid)
+
+nsenter -t ${pid} -m bash -c "mkdir /var/snap/lxd/common/lxd/storage-pools/local/containers/${container_name}"
+nsenter -t ${pid} -m bash -c "mount -t zfs local/containers/${container_name} /var/snap/lxd/common/lxd/storage-pools/local/containers/${container_name}"
+lxd import ${container_name}
+lxc start ${container_name}
