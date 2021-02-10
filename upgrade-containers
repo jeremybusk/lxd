@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -ex
+
+clist="$(lxc list -c ns | awk '!/NAME/{ if ( $4 == "RUNNING" ) print $2}')"
+
+
+function ubuntu_upgrade(){
+  c=$1
+  lxc exec $c -- apt update
+  lxc exec $c -- apt -y upgrade
+  lxc exec $c -- apt -y autoremove
+  lxc exec $c -- apt -y autoclean  # -- -qq -y autoclean
+  lxc exec $c -- apt -y clean
+}
+
+
+function centos_upgrade(){
+  c=$1
+  lxc exec $c -- yum -y update
+}
+
+
+function centos_fixes(){
+  c=$1
+  # https://blog.oless.xyz/post/centos-stream-transaction-failed/
+  if ! [[ $(lxc exec $c -- grep netsharedpath /etc/rpm/macros.dist) ]]; then
+    lxc exec $c -- sh -c "echo '%_netsharedpath /sys:/proc' >> /etc/rpm/macros.dist"
+  fi
+}
+
+function container_restart(){
+    lxc stop $c
+    lxc start $c
+    sleep 10  # Should do more checking and force
+}
+
+
+main(){
+  for c in $clist; do
+    echo "Upgrading: $c"
+    os=$(lxc config show $c | yq e '.config."image.os"' -)
+    if [[ "$os" == "ubuntu" || "$os" == "Debian" ]]; then
+      ubuntu_upgrade $c
+    elif [[ "$os" == "Centos" ]]; then
+      centos_fixes $c
+      centos_upgrade $c
+    else
+      echo E: "Unsupported os"
+    fi
+    sleep 5
+  done
+}
+
+main
