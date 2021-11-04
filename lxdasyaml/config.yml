@@ -1,0 +1,13 @@
+lxd:
+  ipv4: 10.x.y.z
+  bridge: lxdbr0
+containers:
+  u3:
+    name: u3
+    image: ubuntu:20.04
+    ipv4: 172.16.0.31
+    proxy:
+      - "7777:22"
+      - "7778:22"
+    authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC1j9Qx59fvTz6pW1TGACCH0avFoufXlSZG/GAcidwUvMrIHAyXNj6OEfYWBsWRbiZXGIKO/ga1Kvg8Vdt2UYLpsb9k1vxQqPHytk5zjFowNvh+uhjjidYzMqEilJ68zEBzuTr0TCYypxXyUheLAavbWlGmV8jJ6YaoJ+HSRZhf4rFsVACuq9EagjZj0BCvyjA4aKK3y+5WUs4mMWcyFCSrDWTIbPpR/4/wXucKHapj7oG3VVzh9/SctUNmMdtcueKxjhOoWdgm/4Mzhz568MLiS4l6CsNSm/3Xj6/AUCnuehIMJi1xriyU+gsI3Q4j4IhJPw8DpGM6gcmI5nccM+Ra/DVevEuqXhpYWDvEg2kt9ki4gVRdB6nvvyMhVi4k1EMgiJNEav5pEA+yREDFo5XN/ONZomoyVLQdUoM3CRdOSqa+pAoWvbwI1A7Eme01WMN9aEvbRxvOsroPQPXGq+mFraFKWuXz3kn4EfX5jq1emt6ksYwRH/Ij4+P3WznXzIs= example@myhost
