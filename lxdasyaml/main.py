@@ -61,4 +61,6 @@ def create_container(c):
     print("done")
     return True
 
-create_container(config['containers']['u3'])
+for container_name in config['containers']:
+    container = config['containers'][container_name]
+    create_container(container)
